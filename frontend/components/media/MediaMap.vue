@@ -11,6 +11,9 @@ import MapLibreGlDirections, {
 } from "@maplibre/maplibre-gl-directions";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import { render } from "vue";
+import TooltipMap from "../tooltip/TooltipMap.vue";
+import TooltipBase from "../tooltip/TooltipBase.vue";
 
 const props = defineProps<{
   markerColors: string[];
@@ -109,17 +112,14 @@ onMounted(() => {
           })
         );
 
+        const tooltipComponentHolder = document.createElement("div");
+        const tooltipComponent = h(TooltipMap);
+
+        render(tooltipComponent, tooltipComponentHolder);
+
         const popup = new maplibregl.Popup({
           offset: 25,
-        }).setHTML(
-          `<div style="
-            text-align: center;
-            color: grey;"
-          >
-            <div style="font-size: 13px;">${props.eventNames[0]}</div>
-            <div style="color: grey;">${props.eventLocations[0]}</div>
-          </div>`
-        );
+        }).setDOMContent(tooltipComponentHolder);
 
         const marker = new maplibregl.Marker({
           color: `${props.markerColors[0]}`,
