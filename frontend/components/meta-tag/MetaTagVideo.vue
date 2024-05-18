@@ -1,10 +1,13 @@
 <template>
-  <MetaTag iconName="bi:camera-video" :value="link" :label="label" />
+  <MetaTag :iconName="IconMap.VIDEO" :value="link" :label="label" />
 </template>
 
 <script setup lang="ts">
+import { IconMap } from "~/types/icon-map";
+
 defineProps<{
   link: string;
   label: string;
+  iconSize?: string;
 }>();
 </script>

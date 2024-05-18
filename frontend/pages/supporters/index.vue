@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DocsEntry } from "~/types/card-docs-entry";
+import type { DocsEntry } from "~/types/docs-entry";
 
 const cards: DocsEntry[] = [
   {
@@ -36,7 +36,7 @@ const cards: DocsEntry[] = [
     url: "showcase",
     title: "pages.supporters.index.showcase",
     description: "pages.supporters.index.showcase-description",
-    imgURL: "/images/content_pages/icons/bootstrap_heart",
+    imgURL: `${BOOTSTRAP_HEART_URL}`,
     imgDimensions: "h-16 sm:h-20",
     imgAltText: "pages.supporters.index.showcase-alt-text",
   },
@@ -45,7 +45,7 @@ const cards: DocsEntry[] = [
     url: "join",
     title: "pages._global.become-supporter",
     description: "pages.supporters.index.join-description",
-    imgURL: "/images/content_pages/icons/join_icon",
+    imgURL: `${BOOTSTRAP_MODIFIED_JOIN_ICON_URL}`,
     imgDimensions: "h-16 sm:h-20",
     imgAltText: "pages.supporters._global.join-img-alt-text",
   },

@@ -7,7 +7,7 @@
       v-if="iconName === 'IconOrganization'"
       class="mr-1"
       name="IconOrganization"
-      size="1.25em"
+      :size="iconSize ? iconSize : '1.25em'"
     />
     <Icon
       v-else-if="iconName === 'IconSupport'"
@@ -20,14 +20,13 @@
     </p>
   </div>
   <div v-else class="flex items-center gap-1">
-    <Icon class="mr-1" :name="iconName" size="1.25em" />
-    <a
-      v-if="iconName === 'bi:camera-video'"
-      class="block md:hidden lg:block"
-      :href="value"
-      >{{ value }}</a
-    >
-    <p v-else class="block md:hidden lg:block">
+    <Icon
+      class="mr-1"
+      :name="iconName"
+      :size="iconSize ? iconSize : '1.25em'"
+    />
+    <a v-if="iconName === IconMap.VIDEO" :href="value">{{ value }}</a>
+    <p v-else>
       {{ value }}
     </p>
     <p v-if="label">
@@ -37,9 +36,12 @@
 </template>
 
 <script setup lang="ts">
+import { IconMap } from "~/types/icon-map";
+
 defineProps<{
   iconName: string;
   value: string;
   label?: string;
+  iconSize?: string;
 }>();
 </script>

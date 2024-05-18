@@ -1,10 +1,10 @@
 <template>
   <DropdownBase
     :location="location"
-    menuButtonAriaLabel="components.selector-language.open-dropdown-aria-label"
-    menuButtonIcon="bi:globe"
+    :menuButtonIcon="IconMap.GLOBE"
     :menuButtonLabel="$i18n.locale"
     :isMenuButtonUppercase="true"
+    menuButtonAriaLabel="components.selector-language.open-dropdown-aria-label"
   >
     <ul class="px-2 py-2">
       <NuxtLink
@@ -27,6 +27,7 @@
 <script setup lang="ts">
 import { MenuItem } from "@headlessui/vue";
 import type { LocaleObject } from "@nuxtjs/i18n";
+import { IconMap } from "~/types/icon-map";
 import { DropdownLocation } from "~/types/location";
 
 defineProps<{

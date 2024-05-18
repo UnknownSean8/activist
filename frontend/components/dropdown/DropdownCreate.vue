@@ -1,16 +1,17 @@
 <template>
   <DropdownBase
     :location="location"
-    menuButtonAriaLabel="components.sidebar-left-footer.create-aria-label"
-    menuButtonIcon="bi:plus-circle"
-    :menuButtonLabel="$t(`components.sidebar-left-footer.create`)"
+    :menuButtonIcon="IconMap.CIRCLE_PLUS"
+    :menuButtonLabel="$t(`components.dropdown-create.create`)"
     :isMenuButtonUppercase="false"
+    menuButtonAriaLabel="components.dropdown-create.create-aria-label"
   >
-    <DropdownItemsLayout :location="location" :options="createOpt" />
+    <DropdownItemsLayout :location="location" :options="createOptions" />
   </DropdownBase>
 </template>
 
 <script setup lang="ts">
+import { IconMap } from "~/types/icon-map";
 import { DropdownLocation } from "~/types/location";
 import type { MenuSelector } from "~/types/menu-selector";
 
@@ -18,17 +19,17 @@ defineProps<{
   location?: DropdownLocation;
 }>();
 
-const createOpt: MenuSelector[] = [
+const createOptions: MenuSelector[] = [
   {
     id: 1,
     label: "components._global.new-event",
     routeURL: "/events/create",
-    iconURL: "bi:calendar-check",
+    iconURL: `${IconMap.EVENT}`,
     selected: false,
   },
   {
     id: 2,
-    label: "components.sidebar-left-selector.label.new-organization",
+    label: "components.dropdown-create.new-organization",
     routeURL: "/organizations/create",
     iconURL: "IconOrganization",
     selected: false,
@@ -36,7 +37,7 @@ const createOpt: MenuSelector[] = [
   {
     id: 3,
     label: "components._global.new-group",
-    routeURL: "/",
+    routeURL: "/groups/create",
     iconURL: "IconGroup",
     selected: false,
   },

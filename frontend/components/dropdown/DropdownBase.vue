@@ -4,7 +4,7 @@
       <MenuButton
         @focus="expandOnFocus"
         v-slot="{ open }"
-        class="style-btn inline-flex w-full select-none rounded-md px-4 py-2 font-semibold"
+        class="style-btn inline-flex w-full select-none whitespace-nowrap rounded-md px-4 py-2 font-semibold"
         :class="{
           'pl-6': isSideMenu,
           'style-menu-option-cta flex items-center rounded-md pl-1':
@@ -60,7 +60,11 @@
                 'absolute right-2': isSideLeftMenu,
               }"
               :size="isSideLeftMenu ? '1rem' : ''"
-              :name="isSideLeftMenu ? 'bi:chevron-up' : 'bi:chevron-down'"
+              :name="
+                isSideLeftMenu
+                  ? `${IconMap.CHEVRON_UP}`
+                  : `${IconMap.CHEVRON_DOWN}`
+              "
             />
           </Transition>
         </div>
@@ -82,6 +86,7 @@
 
 <script setup lang="ts">
 import { Menu, MenuButton, MenuItems } from "@headlessui/vue";
+import { IconMap } from "~/types/icon-map";
 import { DropdownLocation } from "~/types/location";
 
 const props = defineProps<{
@@ -96,11 +101,11 @@ const props = defineProps<{
 const sidebar = useSidebar();
 
 const isSideLeftMenu = computed(() => {
-  return props.location === DropdownLocation.SIDELEFTMENU;
+  return props.location === DropdownLocation.SIDE_LEFT_MENU;
 });
 
 const isSideMenu = computed(() => {
-  return props.location === DropdownLocation.SIDEMENU;
+  return props.location === DropdownLocation.SIDE_MENU;
 });
 
 const expandOnFocus = () => {

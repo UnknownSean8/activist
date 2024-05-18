@@ -5,18 +5,18 @@
         {{ $t("components._global.connect") }}
       </h3>
       <div
-        class="cursor-pointer break-all rounded-lg p-1 text-light-distinct-text transition-all hover:text-light-text dark:text-dark-distinct-text dark:hover:text-dark-text"
+        class="cursor-pointer break-all rounded-lg p-1 text-light-text transition-all hover:text-light-distinct-text dark:text-dark-text dark:hover:text-dark-distinct-text"
       >
         <Icon
           v-if="userIsAdmin && !editModeEnabled"
           @click="toggleEditMode"
-          name="bi:pencil-square"
+          :name="IconMap.EDIT"
           size="1.2em"
         />
         <Icon
           v-else-if="userIsAdmin && editModeEnabled"
           @click="toggleEditMode"
-          name="bi:x-lg"
+          :name="IconMap.X_LG"
           size="1.2em"
         />
       </div>
@@ -26,30 +26,30 @@
     >
       <li v-for="link in socialLinksRef">
         <div
-          class="flex cursor-pointer items-center gap-3 break-all text-light-distinct-text transition-all hover:text-light-text dark:text-dark-distinct-text dark:hover:text-dark-text"
+          class="flex cursor-pointer items-center gap-3 break-all text-light-text transition-all hover:text-light-distinct-text dark:text-dark-text dark:hover:text-dark-distinct-text"
         >
           <Icon
             v-if="editModeEnabled"
             @click="emit('on-account-removed', link)"
-            name="bi:x-lg"
+            :name="IconMap.EDIT"
             size="1em"
           />
           <Icon
             v-else-if="link.includes('mastodon')"
-            name="bi:mastodon"
+            :name="IconMap.MASTODON"
             size="1.2em"
           />
           <Icon
             v-else-if="link.includes('facebook')"
-            name="bi:facebook"
+            :name="IconMap.FACEBOOK"
             size="1.2em"
           />
           <Icon
             v-else-if="link.includes('instagram')"
-            name="bi:instagram"
+            :name="IconMap.INSTAGRAM"
             size="1.2em"
           />
-          <Icon v-else name="bi:link-45deg" size="1.2em" />
+          <Icon v-else :name="IconMap.LINK" size="1.2em" />
           <div class="font-semibold">
             {{ link }}
           </div>
@@ -67,7 +67,8 @@
               :cta="true"
               label="components.btn-action.new-account"
               fontSize="sm"
-              leftIcon="bi:plus-lg"
+              :leftIcon="IconMap.PLUS"
+              iconSize="1.35em"
               ariaLabel="components._global.new-account-aria-label"
             />
           </PopoverButton>
@@ -89,6 +90,11 @@
                     'components.card-connect.app-account-popup-field-name-prompt'
                   )
                 "
+                :fieldLabelPrompt="
+                  $t(
+                    'components.card-connect.app-account-popup-field-label-prompt'
+                  )
+                "
                 :ctaBtnLabel="
                   $t('components.card-connect.app-account-popup-cta-btn-label')
                 "
@@ -106,6 +112,7 @@
 
 <script setup lang="ts">
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/vue";
+import { IconMap } from "~/types/icon-map";
 
 const props = defineProps<{
   socialLinks?: string[];

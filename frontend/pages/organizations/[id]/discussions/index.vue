@@ -22,57 +22,28 @@
           linkTo="/"
           label="components.btn-route-internal.new-discussion"
           fontSize="sm"
-          leftIcon="bi:plus-lg"
+          :leftIcon="IconMap.PLUS"
           iconSize="1.35em"
           ariaLabel="components.btn-route-internal.new-discussion-aria-label"
         />
-        <ModalSharePage
-          :cta="true"
-          label="components._global.share-organization"
-          ariaLabel="components._global.share-organization-aria-label"
-          :organization="organization"
-        />
       </div>
     </HeaderAppPage>
-    <div class="space-y-6 pb-6 pt-3 md:pt-4">
-      <CardDiscussion :isPrivate="false" :discussion="discussion" />
-      <CardDiscussion :isPrivate="false" :discussion="discussion" />
+    <PagePreviewDiscussion />
+    <!-- <div v-if="organization.discussions" class="space-y-6 pb-6 pt-3 md:pt-4">
+      <CardDiscussion
+        v-for="(d, i) in organization.discussions"
+        :key="i"
+        :isPrivate="false"
+        :discussion="d"
+      />
     </div>
+    <EmptyState v-else pageType="discussions" :permission="false" /> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Discussion } from "~/types/card-discussion";
-import type { Organization } from "~/types/organization";
+import { IconMap } from "~/types/icon-map";
+import { testTechOrg } from "~/utils/testEntities";
 
-definePageMeta({
-  layout: "sidebar",
-});
-
-const organization: Organization = {
-  name: "tech from below",
-  status: "approved",
-  tagline: "Technologie von und für soziale Bewegungen",
-  location: "Berlin, Germany",
-  description:
-    "Nulla aliqua sit fugiat commodo excepteur deserunt dolor ullamco Lorem. Esse aliquip nisi ullamco pariatur velit officia. Eiusmod commodo nulla consequat minim laboris pariatur adipisicing. Veniam amet nostrud id cupidatat. Esse duis velit elit duis non labore adipisicing sunt eu nostrud. Occaecat mollit et do consectetur fugiat amet.",
-  topic: "Technology and Privacy",
-  members: 3,
-  supporters: 60,
-  imageURL: "/images/tech-from-below.svg",
-  workingGroups: ["meetup", "code-night"],
-  socialLinks: ["tfb@mastodon", "tfb@email"],
-  donationPrompt: "Hey thanks!",
-};
-
-const discussion: Discussion = {
-  title: "Title of discussion ",
-  author: "John A. Tester",
-  category: "Category",
-  text: "I love to test!",
-  upVoters: 123,
-  participants: 3,
-  messages: 3,
-  creationDate: new Date(),
-};
+const organization = testTechOrg;
 </script>

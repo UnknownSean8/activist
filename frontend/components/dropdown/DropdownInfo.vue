@@ -1,16 +1,17 @@
 <template>
   <DropdownBase
     :location="location"
-    menuButtonAriaLabel="components.sidebar-left-footer.info-aria-label"
-    menuButtonIcon="bi:info-circle"
-    :menuButtonLabel="$t(`components.sidebar-left-footer.info`)"
+    :menuButtonIcon="IconMap.CIRCLE_INFO"
+    :menuButtonLabel="$t(`components.dropdown-info.info`)"
     :isMenuButtonUppercase="false"
+    menuButtonAriaLabel="components.dropdown-info.info-aria-label"
   >
-    <DropdownItemsLayout :location="location" :options="infoOpt" />
+    <DropdownItemsLayout :location="location" :options="infoOptions" />
   </DropdownBase>
 </template>
 
 <script setup lang="ts">
+import { IconMap } from "~/types/icon-map";
 import { DropdownLocation } from "~/types/location";
 import type { MenuSelector } from "~/types/menu-selector";
 
@@ -18,26 +19,26 @@ defineProps<{
   location?: DropdownLocation;
 }>();
 
-const infoOpt: MenuSelector[] = [
+const infoOptions: MenuSelector[] = [
   {
     id: 1,
     label: "_global.help",
     routeURL: "/help",
-    iconURL: "bi:question-circle",
+    iconURL: `${IconMap.CIRCLE_QUESTION}`,
     selected: false,
   },
   {
     id: 2,
     label: "_global.documentation",
     routeURL: "/docs",
-    iconURL: "bi:layout-text-sidebar-reverse",
+    iconURL: `${IconMap.DOCS}`,
     selected: false,
   },
   {
     id: 3,
     label: "_global.legal",
     routeURL: "/legal",
-    iconURL: "IconLegal",
+    iconURL: `${IconMap.LEGAL}`,
     selected: false,
   },
 ];

@@ -1,10 +1,7 @@
-const createMenuEntry = (
-  label: string,
-  basePath: string,
-  iconURL: string,
-  active: boolean
-) => {
-  const { locale, locales } = useI18n();
+import { IconMap } from "~/types/icon-map";
+
+const createMenuEntry = (label: string, basePath: string, iconURL: string) => {
+  const { locale } = useI18n();
   const router = useRouter();
   const id = Number(router.currentRoute.value.params.id);
   const routeURL = `/${locale.value}/${basePath}/${id}/${label
@@ -18,7 +15,6 @@ const createMenuEntry = (
     routeURL,
     iconURL,
     selected,
-    active,
     id,
   };
 };
@@ -29,40 +25,37 @@ const useMenuEntriesState = () => {
   let removeGuard = () => {};
 
   const organizationEntries = ref([
-    createMenuEntry("_global.about", "organizations", "bi:card-text", true),
+    createMenuEntry("_global.about", "organizations", `${IconMap.ABOUT}`),
+    createMenuEntry("_global.events", "organizations", `${IconMap.EVENT}`),
+    createMenuEntry("_global.groups", "organizations", `${IconMap.GROUP}`),
     createMenuEntry(
-      "_global.events",
+      "_global.resources",
       "organizations",
-      "bi:calendar-check",
-      true
+      `${IconMap.RESOURCE}`
     ),
-    createMenuEntry("_global.groups", "organizations", "IconGroup", true),
-    createMenuEntry("_global.resources", "organizations", "IconResource", true),
-    createMenuEntry("_global.faq", "organizations", "IconFAQ", true),
-    createMenuEntry("_global.settings", "organizations", "bi:gear", true),
-    createMenuEntry("_global.team", "organizations", "bi:people", true),
-    createMenuEntry("_global.affiliates", "organizations", "IconSupport", true),
-    createMenuEntry("_global.tasks", "organizations", "bi:check-square", true),
+    createMenuEntry("_global.faq", "organizations", `${IconMap.FAQ}`),
+    // createMenuEntry("_global.team", "organizations", `${IconMap.PEOPLE}`),
+    createMenuEntry(
+      "_global.affiliates",
+      "organizations",
+      `${IconMap.SUPPORT}`
+    ),
+    createMenuEntry("_global.tasks", "organizations", `${IconMap.TASK}`),
     createMenuEntry(
       "_global.discussions",
       "organizations",
-      "octicon:comment-discussion-24",
-      true
+      `${IconMap.DISCUSSION}`
     ),
+    createMenuEntry("_global.settings", "organizations", `${IconMap.SETTINGS}`),
   ]);
 
   const eventEntries = ref([
-    createMenuEntry("_global.about", "events", "bi:card-text", true),
-    createMenuEntry("_global.team", "events", "bi:people", true),
-    createMenuEntry("_global.resources", "events", "IconResource", true),
-    createMenuEntry("_global.settings", "events", "bi:gear", true),
-    createMenuEntry("_global.tasks", "events", "bi:check-square", true),
-    createMenuEntry(
-      "_global.discussion",
-      "events",
-      "octicon:comment-discussion-24",
-      true
-    ),
+    createMenuEntry("_global.about", "events", `${IconMap.ABOUT}`),
+    createMenuEntry("_global.team", "events", `${IconMap.PEOPLE}`),
+    createMenuEntry("_global.resources", "events", `${IconMap.RESOURCE}`),
+    createMenuEntry("_global.tasks", "events", `${IconMap.TASK}`),
+    createMenuEntry("_global.discussion", "events", `${IconMap.DISCUSSION}`),
+    createMenuEntry("_global.settings", "events", `${IconMap.SETTINGS}`),
   ]);
 
   const updateCurrentPath = () => {
@@ -77,9 +70,17 @@ const useMenuEntriesState = () => {
     }
 
     for (const button of buttons.value) {
-      button.selected = currentPath.value.endsWith(
-        button.routeURL.split("/").pop()!
-      );
+      if (currentPath.value.includes("/groups/")) {
+        if (button.label === "_global.groups") {
+          button.selected = true;
+        } else {
+          button.selected = false;
+        }
+      } else {
+        button.selected = currentPath.value.endsWith(
+          button.routeURL.split("/").pop()!
+        );
+      }
     }
   };
 

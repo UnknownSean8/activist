@@ -17,35 +17,29 @@
           :cta="true"
           label="components.btn-action.invite-someone"
           fontSize="sm"
-          leftIcon="bi:plus-lg"
+          :leftIcon="IconMap.PLUS"
           iconSize="1.35em"
           ariaLabel="components.btn-action.invite-someone-org-aria-label"
         />
       </div>
     </HeaderAppPage>
+    <div class="space-y-3 py-4"></div>
+    <PagePreviewTeam />
+    <!-- <div v-if="organization.members" class="space-y-3 py-4">
+      <CardSearchResultUser
+        v-for="(u, i) in organization.members"
+        :key="i"
+        :isReduced="true"
+        :user="u"
+      />
+    </div>
+    <EmptyState v-else pageType="users" :permission="false" /> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Organization } from "~/types/organization";
+import { IconMap } from "~/types/icon-map";
+import { testTechOrg } from "~/utils/testEntities";
 
-definePageMeta({
-  layout: "sidebar",
-});
-
-const organization: Organization = {
-  name: "tech from below",
-  status: "approved",
-  tagline: "Technologie von und für soziale Bewegungen",
-  location: "Berlin, Germany",
-  description:
-    "Nulla aliqua sit fugiat commodo excepteur deserunt dolor ullamco Lorem. Esse aliquip nisi ullamco pariatur velit officia. Eiusmod commodo nulla consequat minim laboris pariatur adipisicing. Veniam amet nostrud id cupidatat. Esse duis velit elit duis non labore adipisicing sunt eu nostrud. Occaecat mollit et do consectetur fugiat amet.",
-  topic: "Technology and Privacy",
-  members: 3,
-  supporters: 60,
-  imageURL: "/images/tech-from-below.svg",
-  workingGroups: ["meetup", "code-night"],
-  socialLinks: ["tfb@mastodon", "tfb@email"],
-  donationPrompt: "Hey thanks!",
-};
+const organization = testTechOrg;
 </script>

@@ -12,81 +12,33 @@
       :underDevelopment="true"
     >
       <div class="flex space-x-2 lg:space-x-3">
-        <ModalSharePage
+        <BtnRouteInternal
+          class="hidden w-max md:block"
           :cta="true"
-          label="components._global.share-event"
-          ariaLabel="components._global.share-event-aria-label"
-          :event="event"
+          linkTo="/"
+          label="components.btn-route-internal.new-discussion"
+          fontSize="sm"
+          :leftIcon="IconMap.PLUS"
+          iconSize="1.35em"
+          ariaLabel="components.btn-route-internal.new-discussion-aria-label"
         />
       </div>
     </HeaderAppPage>
-    <div class="space-y-6 pb-6 pt-3 md:pt-4">
+    <PagePreviewDiscussion />
+    <!-- <div v-if="event.discussion" class="space-y-6 pb-6 pt-3 md:pt-4">
       <Discussion
-        :discussionInput="discussionInput"
-        :discussionEntries="[discussionEntry, discussionEntry]"
+        :discussionInput="event.discussion"
+        :discussionEntries="[event.discussion?.entries]"
         :organizations="event.organizations"
       />
     </div>
+    <EmptyState v-else pageType="discussions" :permission="false" /> -->
   </div>
 </template>
 
 <script setup lang="ts">
-import type { DiscussionEntry } from "~/types/card-discussion-entry";
-import type { DiscussionInput } from "~/types/card-discussion-input";
-import type { Event } from "~/types/event";
-import type { Organization } from "~/types/organization";
+import { IconMap } from "~/types/icon-map";
+import { testClimateEvent } from "~/utils/testEntities";
 
-definePageMeta({
-  layout: "sidebar",
-});
-
-const organization: Organization = {
-  name: "Berlin Climate Org",
-  status: "approved",
-  tagline: "Fighting Climate Change",
-  location: "Berlin, Germany",
-  description:
-    "Nulla aliqua sit fugiat commodo excepteur deserunt dolor ullamco Lorem. Esse aliquip nisi ullamco pariatur velit officia. Eiusmod commodo nulla consequat minim laboris pariatur adipisicing. Veniam amet nostrud id cupidatat. Esse duis velit elit duis non labore adipisicing sunt eu nostrud. Occaecat mollit et do consectetur fugiat amet.",
-  topic: "Environment",
-  members: 3,
-  supporters: 60,
-  workingGroups: ["Fundraising", "Campaigning"],
-  socialLinks: ["climate-org@mastodon", "climate-org@email"],
-  donationPrompt: "Hey thanks!",
-};
-
-const event: Event = {
-  name: "Brandenburg Gate Climate Demo",
-  tagline: "There is no Planet B",
-  organizations: [organization],
-  type: "action",
-  topic: "Environment",
-  description:
-    "Aute aliqua reprehenderit ex ut commodo nostrud et excepteur. Sunt amet velit sunt fugiat et excepteur dolore pariatur nisi non. Exercitation aute aute culpa commodo commodo ea Lorem aliquip id duis. Laboris nostrud ullamco ea voluptate et anim id adipisicing sint reprehenderit incididunt elit. Est fugiat pariatur elit culpa in incididunt eu esse cupidatat minim. Deserunt duis culpa minim Lorem consectetur quis fugiat ipsum nostrud voluptate veniam do. Reprehenderit duis officia in enim anim elit.",
-  getInvolvedDescription:
-    "Sint cillum excepteur sint cupidatat do consectetur excepteur nisi veniam. Sint id in sit eiusmod Lorem commodo minim culpa id cupidatat consectetur. Labore nisi est officia sunt occaecat.",
-  inPersonLocation: "Brandenburg Gate, Berlin",
-  date: new Date().toISOString().slice(0, 10),
-  supporters: 30,
-  imageURL: "/images/tech-from-below.svg",
-  socialLinks: ["climate_org@mastodon", "climate_org@email.com"],
-};
-
-const discussionEntry: DiscussionEntry = {
-  id: 1,
-  author: "John A. Tester",
-  content:
-    "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.",
-  votes: 123,
-  date: new Date(),
-};
-
-const discussionInput: DiscussionInput = {
-  name: "Text ",
-  location: "Testerville, TN",
-  supporters: 123,
-  description: "I love to test!",
-  category: "Category",
-  highRisk: false,
-};
+const event = testClimateEvent;
 </script>

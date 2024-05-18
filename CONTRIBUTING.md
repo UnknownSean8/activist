@@ -122,15 +122,17 @@ activist is very open to contributions from people in the early stages of their 
 
 ## Development environment [`⇧`](#contents)
 
-1. First and foremost, please see the suggested IDE extensions in the dropdown below to make sure that your editor is set up properly.
+1. First and foremost, please see the suggested IDE setup in the dropdown below to make sure that your editor is ready for development.
 
 > [!IMPORTANT]
 >
-> <details><summary>Suggested IDE extensions</summary>
+> <details><summary>Suggested IDE setup</summary>
 >
 > <p>
 >
 > VS Code
+>
+> Install the following extensions:
 >
 > - [batisteo.vscode-django](https://marketplace.visualstudio.com/items?itemName=batisteo.vscode-django)
 > - [bradlc.vscode-tailwindcss](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
@@ -139,13 +141,19 @@ activist is very open to contributions from people in the early stages of their 
 > - [streetsidesoftware.code-spell-checker](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker)
 > - [Vue.volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
 >
+> WebStorm
+>
+> - Check out the [Vue.js development docs](https://www.jetbrains.com/help/webstorm/vue-js.html)
+> - Make sure a [local Node.js interpreter](https://www.jetbrains.com/help/webstorm/developing-node-js-applications.html#ws_node_configure_local_node_interpreter) is configured in your project
+> - Make sure the [Vue.js plugin](https://github.com/JetBrains/intellij-plugins/tree/master/vuejs) and [JavaScript Debugger](https://www.jetbrains.com/help/webstorm/configuring-javascript-debugger.html) are enabled in the plugins page of the settings
+>
 > </p>
 > </details>
 
 2. To setup your development environment, first install [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/).
 
 > [!NOTE]
-> If you are new to Docker, as an alternative activist recommends installing [Docker Desktop](https://docs.docker.com/desktop/). Docker Desktop comes with many Docker tools and a straightforward user interface.
+> If you are new to Docker, activist recommends installing [Docker Desktop](https://docs.docker.com/desktop/). Docker Desktop comes with many Docker tools and a straightforward user interface.
 
 3. [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) the [activist repo](https://github.com/activist-org/activist), clone your fork, and configure the remotes:
 
@@ -369,14 +377,15 @@ When making a contribution, adhering to the [GitHub flow](https://docs.github.co
    git checkout -b <topic-branch-name>
    ```
 
-3. Install [pre-commit](https://pre-commit.com/) to ensure during development that each of your commits is properly formatted against our linter and formatters:
+3. Install [pre-commit](https://pre-commit.com/) to ensure that each of your commits is properly checked against our linter and formatters:
 
    ```bash
+   # In the project root:
    pre-commit install
    ```
 
 > [!NOTE]
-> pre-commit is Python package that can be install via pip or any other Python package manager. You can also find it in our [requirements.txt](backend/requirements.txt) file.
+> pre-commit is Python package that can be installed via pip or any other Python package manager. You can also find it in our [requirements.txt](backend/requirements.txt) file.
 >
 > ```bash
 > pip install pre-commit

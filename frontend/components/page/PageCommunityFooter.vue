@@ -1,9 +1,9 @@
 <template>
   <div class="flex-col">
     <p class="responsive-h4 font-bold">
-      {{ $t("components.page-community-footer.invite-text-1") }}
+      {{ $t(headerText) }}
     </p>
-    <ul class="list-disc space-y-1 pb-1 pl-4 pt-3">
+    <ul v-if="!helpNeeded" class="list-disc space-y-1 pb-1 pl-4 pt-3">
       <li>
         {{ $t("components.page-community-footer.invite-text-2-1") }}
         <a
@@ -11,9 +11,9 @@
           href="https://github.com/orgs/activist-org"
           target="_blank"
         >
-          {{ $t("components.page-community-footer.invite-text-2-2") }}
+          {{ $t("_global.on-github") }}
           <Icon
-            name="bi:box-arrow-up-right"
+            :name="IconMap.EXTERNAL_LINK"
             size="1em"
             style="vertical-align: baseline"
           />
@@ -29,7 +29,7 @@
         >
           {{ $t("_global.public-matrix-chat-rooms") }}
           <Icon
-            name="bi:box-arrow-up-right"
+            :name="IconMap.EXTERNAL_LINK"
             size="1em"
             style="vertical-align: baseline"
           />
@@ -45,12 +45,46 @@
         >
           {{ $t("components.page-community-footer.invite-text-4-2") }}
           <Icon
-            name="bi:box-arrow-up-right"
+            :name="IconMap.EXTERNAL_LINK"
             size="1em"
             style="vertical-align: baseline"
           />
         </a>
         {{ $t("components.page-community-footer.invite-text-4-3") }}
+      </li>
+    </ul>
+    <ul v-else class="list-disc space-y-1 pb-1 pl-4 pt-3">
+      <li>
+        {{ $t("components.page-community-footer.need-help-text-1-1") }}
+        <a
+          class="focus-brand link-text items-center"
+          href="https://matrix.to/#/#activist_community:matrix.org"
+          target="_blank"
+        >
+          {{ $t("_global.public-matrix-chat-rooms") }}
+          <Icon
+            :name="IconMap.EXTERNAL_LINK"
+            size="1em"
+            style="vertical-align: baseline"
+          />
+        </a>
+        {{ $t("components.page-community-footer.need-help-text-1-3") }}
+      </li>
+      <li>
+        {{ $t("components.page-community-footer.need-help-text-2-1") }}
+        <a
+          class="focus-brand link-text items-center"
+          href="https://github.com/orgs/activist-org"
+          target="_blank"
+        >
+          {{ $t("components._global.github") }}
+          <Icon
+            :name="IconMap.EXTERNAL_LINK"
+            size="1em"
+            style="vertical-align: baseline"
+          />
+        </a>
+        {{ $t("components.page-community-footer.need-help-text-2-3") }}
       </li>
     </ul>
   </div>
@@ -61,3 +95,22 @@
     <slot />
   </div>
 </template>
+
+<script setup lang="ts">
+import { IconMap } from "~/types/icon-map";
+
+export interface Props {
+  header?: string;
+  helpNeeded?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  header: "components.page-community-footer.invite-text-1",
+});
+
+const headerText = ref(props.header);
+
+if (props.helpNeeded == true) {
+  headerText.value = "components.page-community-footer.need-help";
+}
+</script>

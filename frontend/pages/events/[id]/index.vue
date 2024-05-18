@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="windowWidth < BreakpointMap.SMALL"
     class="flex flex-col items-center justify-between gap-8 bg-light-layer-0 px-8 py-8 text-light-text dark:bg-dark-layer-0 dark:text-dark-text"
   >
     <Head>
@@ -8,7 +9,7 @@
     <div class="mx-auto h-[260px] w-3/4">
       <ImageEvent
         :eventType="event.type"
-        :imgURL="event?.imageURL"
+        :imgURL="event.iconURL ? event.iconURL : ''"
         :alt="
           $t('components._global.entity-logo', {
             entity_name: event?.name,
@@ -58,7 +59,7 @@
         linkTo="/"
         label="components.btn-route-internal.offer-to-help"
         fontSize="base"
-        rightIcon="bi:arrow-right"
+        :rightIcon="IconMap.ARROW_RIGHT"
         iconSize="1.25em"
         ariaLabel="components.btn-route-internal.offer-to-help-aria-label"
       />
@@ -67,87 +68,88 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
-import type { Event } from "~/types/event";
+import { BreakpointMap } from "~/types/breakpoint-map";
+import { IconMap } from "~/types/icon-map";
 import type { MenuSelector } from "~/types/menu-selector";
+import { testClimateEvent } from "~/utils/testEntities";
 
-definePageMeta({
-  layout: "sidebar",
-});
+const event = testClimateEvent;
 
 const { id } = useRoute().params;
 const localPath = useLocalePath();
-const event: Event = {
-  name: "Test Event",
-  type: "action",
-  tagline: "We love to test!",
-  organizations: ["Testers LLC"],
-  topic: "Testing and Designing",
-  description: "This is a test event for testers.",
-  getInvolvedDescription: "Wanna help test?",
-  onlineLocation: "Zoom Test Room",
-  date: new Date(),
-  supporters: 10,
-};
 
 const eventButtons: MenuSelector[] = [
   {
     id: 1,
     label: "_global.about",
     routeURL: "/events/" + id + "/about",
-    iconURL: "bi:card-text",
+    iconURL: `${IconMap.ABOUT}`,
     selected: useRoute().path.split("/").pop() === "about" ? true : true,
   },
   {
     id: 2,
     label: "_global.team",
     routeURL: "/events/" + id + "/team",
-    iconURL: "bi:people",
+    iconURL: `${IconMap.PEOPLE}`,
     selected: useRoute().path.split("/").pop() === "team" ? true : true,
   },
   {
     id: 3,
     label: "_global.resources",
     routeURL: "/events/" + id + "/resources",
-    iconURL: "IconResource",
+    iconURL: `${IconMap.RESOURCE}`,
     selected: useRoute().path.split("/").pop() === "resources" ? true : true,
   },
   {
     id: 4,
+    label: "_global.tasks",
+    routeURL: "/events/" + id + "/tasks",
+    iconURL: `${IconMap.TASK}`,
+    selected: useRoute().path.split("/").pop() === "tasks" ? true : true,
+  },
+  {
+    id: 5,
+    label: "_global.discussions",
+    routeURL: "/events/" + id + "/discussions",
+    iconURL: `${IconMap.DISCUSSION}`,
+    selected: useRoute().path.split("/").pop() === "discussions" ? true : true,
+  },
+  {
+    id: 6,
     label: "_global.settings",
     routeURL: "/events/" + id + "/settings",
-    iconURL: "bi:gear",
+    iconURL: `${IconMap.SETTINGS}`,
     selected: useRoute().path.split("/").pop() === "settings" ? true : true,
   },
-  // {
-  //   label: "_global.tasks",
-  //   routeURL: "/events/" + id + "/tasks",
-  //   iconURL: "bi:check-square",
-  //   selected: useRoute().path.split("/").pop() === "tasks" ? false : false,
-  //   active: false,
-  // },
-  // {
-  //   label: "_global.discussions",
-  //   routeURL: "/events/" + id + "/discussions",
-  //   iconURL: "octicon:comment-discussion-24",
-  //   selected:
-  //     useRoute().path.split("/").pop() === "discussions" ? false : false,
-  //   active: false,
-  // },
 ];
 
+const windowWidth = ref(window.innerWidth);
+
 const handleResize = () => {
-  if (window.innerWidth > 640) {
-    window.removeEventListener("resize", handleResize);
-    navigateTo(`${id}/about`);
+  windowWidth.value = window.innerWidth;
+  if (windowWidth.value > BreakpointMap.SMALL) {
+    const { locale } = useI18n();
+    const currentRoute = useRoute();
+
+    if (
+      currentRoute.path !== `/${locale.value}/events/${id}/about` ||
+      currentRoute.path === `/${locale.value}/events/${id}/`
+    ) {
+      navigateTo(`/${locale.value}/events/${id}/about`);
+    }
   }
 };
 
 onMounted(() => {
-  // Add event listener to handle resizing.
-  window.addEventListener("resize", handleResize);
-
-  // Verify that the user is on a mobile device.
   handleResize();
+  window.addEventListener("resize", handleResize);
+});
+
+onUpdated(() => {
+  handleResize();
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", handleResize);
 });
 </script>

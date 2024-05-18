@@ -1,22 +1,25 @@
+"""
+Serializers for the content app.
+"""
+
 from typing import Dict, Union
 
 from django.utils.translation import gettext as _
 from PIL import Image as PilImage
 from rest_framework import serializers
 
-from events.models import Format
 from utils.utils import (
     validate_creation_and_deletion_dates,
     validate_creation_and_deprecation_dates,
-    validate_empty,
-    validate_object_existence,
 )
 
 from .models import (
     Discussion,
     DiscussionEntry,
+    DiscussionTag,
     Faq,
     Image,
+    IsoCodeMap,
     Resource,
     ResourceTag,
     ResourceTopic,
@@ -34,7 +37,6 @@ class DiscussionSerializer(serializers.ModelSerializer[Discussion]):
             "id",
             "created_by",
             "org_id",
-            "group_id",
             "event_id",
             "category",
             "creation_date",
@@ -60,12 +62,6 @@ class FaqSerializer(serializers.ModelSerializer[Faq]):
         model = Faq
         fields = ["id", "question", "org_id", "answer", "last_updated"]
 
-    def validate(self, data: Dict[str, Union[str, int]]) -> Dict[str, Union[str, int]]:
-        validate_empty(data["question"], "question")
-        validate_object_existence("entities.Organization", data["org_id"])
-
-        return data
-
 
 class ResourceSerializer(serializers.ModelSerializer[Resource]):
     class Meta:
@@ -73,10 +69,9 @@ class ResourceSerializer(serializers.ModelSerializer[Resource]):
         fields = [
             "name",
             "description",
-            "topics",
             "category",
             "url",
-            "private",
+            "is_private",
             "created_by",
             "creation_date",
             "last_updated",
@@ -89,8 +84,6 @@ class TaskSerializer(serializers.ModelSerializer[Task]):
         fields = "__all__"
 
     def validate(self, data: Dict[str, Union[str, int]]) -> Dict[str, Union[str, int]]:
-        validate_empty(data["name"], "name")
-        validate_empty(data["description"], "description")
         validate_creation_and_deletion_dates(data)
 
         return data
@@ -102,9 +95,6 @@ class TopicSerializer(serializers.ModelSerializer[Topic]):
         fields = "__all__"
 
     def validate(self, data: Dict[str, Union[str, int]]) -> Dict[str, Union[str, int]]:
-        validate_empty(data["name"], "name")
-        validate_empty(data["description"], "description")
-
         if data["active"] is True and data["deprecation_date"] is not None:
             raise serializers.ValidationError(
                 _("Active topics cannot have a deprecation date."),
@@ -127,22 +117,11 @@ class TagSerializer(serializers.ModelSerializer[Tag]):
         model = Tag
         fields = "__all__"
 
-    def validate(self, data: Dict[str, Union[str, int]]) -> Dict[str, Union[str, int]]:
-        validate_empty(data["text"], "text")
-
-        return data
-
 
 class ResourceTopicSerializer(serializers.ModelSerializer[ResourceTopic]):
     class Meta:
         model = ResourceTopic
         fields = "__all__"
-
-    def validate(self, data: Dict[str, Union[str, int]]) -> Dict[str, Union[str, int]]:
-        validate_object_existence(Resource, data["resource_id"])
-        validate_object_existence(Topic, data["topic_id"])
-
-        return data
 
 
 class ResourceTagSerializer(serializers.ModelSerializer[ResourceTag]):
@@ -150,37 +129,17 @@ class ResourceTagSerializer(serializers.ModelSerializer[ResourceTag]):
         model = ResourceTag
         fields = "__all__"
 
-    def validate(self, data: Dict[str, Union[str, int]]) -> Dict[str, Union[str, int]]:
-        validate_object_existence(Resource, data["resource_id"])
-        validate_object_existence(Tag, data["tag_id"])
-
-        return data
-
 
 class TopicFormatSerializer(serializers.ModelSerializer[TopicFormat]):
     class Meta:
         model = TopicFormat
         fields = "__all__"
 
-    def validate(self, data: Dict[str, Union[str, int]]) -> Dict[str, Union[str, int]]:
-        validate_object_existence(Topic, data["topic_id"])
-        validate_object_existence(Format, data["format_id"])
 
-        return data
-
-
-# TODO: implement the Discussion models and then import them here, as also the DiscussionTag model.
-
-# class DiscussionTagSerializer(serializers.ModelSerializer[DiscussionTag]):
-#     class Meta:
-#         model = DiscussionTag
-#         fields = "__all__"
-
-#     def validate(self, data: Dict[str, Union[str, int]]) -> Dict[str, Union[str, int]]:
-#         validate_object_existence(Discussion, data["discussion_id"])
-#         validate_object_existence(Tag, data["tag_id"])
-
-#         return data
+class DiscussionTagSerializer(serializers.ModelSerializer[DiscussionTag]):
+    class Meta:
+        model = DiscussionTag
+        fields = "__all__"
 
 
 class ImageSerializer(serializers.ModelSerializer[Image]):
@@ -209,3 +168,9 @@ class ImageSerializer(serializers.ModelSerializer[Image]):
             )
 
         return data
+
+
+class IsoCodeMapSerializer(serializers.ModelSerializer[IsoCodeMap]):
+    class Meta:
+        model = IsoCodeMap
+        fields = "__all__"

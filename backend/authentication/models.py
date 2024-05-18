@@ -1,15 +1,5 @@
 """
-Authentication Models
-
-This file contains models for the authentication app.
-
-Contents:
-    - SupportEntityType
-    - Support
-    - UserModel
-    - UserResource
-    - UserTask
-    - UserTopic
+Models for the authentication app.
 """
 
 from typing import Any
@@ -23,8 +13,6 @@ from django.contrib.auth.models import (
 )
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
-
-from backend.mixins.models import CreationDeletionMixin
 
 
 class SupportEntityType(models.Model):
@@ -48,6 +36,7 @@ class Support(models.Model):
     supported_entity = models.ForeignKey(
         "entities.Organization", on_delete=models.CASCADE, related_name="supported"
     )
+    creation_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
         return f"{self.id}"
@@ -78,7 +67,7 @@ class CustomAccountManager(BaseUserManager[User]):
         username: str,
         password: str,
         **other_fields: bool,
-    ) -> Any:
+    ) -> User:
         if not email:
             raise ValueError(("You must provide an email address"))
 
@@ -89,23 +78,29 @@ class CustomAccountManager(BaseUserManager[User]):
         return user
 
 
-class UserModel(AbstractUser, PermissionsMixin, CreationDeletionMixin):
+class UserModel(AbstractUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     username = models.CharField(max_length=255, unique=True)
     name = models.CharField(max_length=255, blank=True)
     password = models.CharField(max_length=255)
-    description = models.TextField(max_length=500)
+    description = models.TextField(max_length=500, blank=True)
     verified = models.BooleanField(default=False)
     verification_method = models.CharField(max_length=30, blank=True)
     verification_partner = models.ForeignKey(
-        "UserModel", on_delete=models.SET_NULL, null=True
+        "authentication.UserModel", on_delete=models.SET_NULL, null=True
     )
-    user_icon = models.ForeignKey("content.Image", on_delete=models.SET_NULL, null=True)
-    social_accounts = ArrayField(
-        models.CharField(max_length=255), blank=True, null=True
+    icon_url = models.ForeignKey(
+        "content.Image", on_delete=models.SET_NULL, blank=True, null=True
     )
-    private = models.BooleanField(default=False)
-    high_risk = models.BooleanField(default=False)
+    email = models.EmailField(unique=True)
+    social_links = ArrayField(models.CharField(max_length=255), blank=True, null=True)
+    is_private = models.BooleanField(default=False)
+    is_high_risk = models.BooleanField(default=False)
+    creation_date = models.DateTimeField(auto_now_add=True)
+
+    # Django specific fields
+    is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
 
     objects = CustomAccountManager()  # type: ignore
 
@@ -113,7 +108,7 @@ class UserModel(AbstractUser, PermissionsMixin, CreationDeletionMixin):
     REQUIRED_FIELDS = ["email"]
 
     def __str__(self) -> str:
-        return self.name
+        return self.username
 
 
 class UserResource(models.Model):

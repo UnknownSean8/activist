@@ -1,65 +1,91 @@
 <template>
   <DropdownBase
     :location="location"
-    menuButtonAriaLabel="components.sidebar-left-footer.username-aria-label"
-    menuButtonIcon="bi:person-circle"
-    :menuButtonLabel="$t(`components.sidebar-left-footer.username`)"
+    :menuButtonIcon="IconMap.CIRCLE_PERSON"
+    :menuButtonLabel="
+      userIsSignedIn
+        ? $t(`components.dropdown-user-options.username`)
+        : $t(`components.dropdown-user-options.join-activist`)
+    "
     :isMenuButtonUppercase="false"
     :isMenuButtonBold="true"
+    menuButtonAriaLabel="components.dropdown-user-options.username-aria-label"
   >
-    <DropdownItemsLayout :location="location" :options="userOpt" />
+    <DropdownItemsLayout
+      :location="location"
+      :options="userIsSignedIn ? userOptionsSignedIn : userOptionsSignedOut"
+    />
   </DropdownBase>
 </template>
 
 <script setup lang="ts">
+import { IconMap } from "~/types/icon-map";
 import { DropdownLocation } from "~/types/location";
 import type { MenuSelector } from "~/types/menu-selector";
 
 defineProps<{
   location?: DropdownLocation;
+  userIsSignedIn: boolean;
 }>();
 
-const userOpt: MenuSelector[] = [
+const userOptionsSignedIn: MenuSelector[] = [
   {
     id: 1,
-    label: "components.sidebar-left-selector.label.your-profile",
+    label: "components.dropdown-user-options.your-profile",
     routeURL: "/",
-    iconURL: "bi:person-circle",
+    iconURL: `${IconMap.CIRCLE_PERSON}`,
     selected: false,
   },
   {
     id: 2,
-    label: "components.sidebar-left-selector.label.your-events",
+    label: "components.dropdown-user-options.your-events",
     routeURL: "/",
-    iconURL: "bi:calendar-check",
+    iconURL: `${IconMap.EVENT}`,
     selected: false,
   },
   {
     id: 3,
-    label: "components.sidebar-left-selector.label.your-orgs",
+    label: "components.dropdown-user-options.your-orgs",
     routeURL: "/",
-    iconURL: "IconOrganization",
+    iconURL: `${IconMap.ORGANIZATION}`,
     selected: false,
   },
   {
     id: 4,
     label: "_global.notifications",
     routeURL: "/",
-    iconURL: "bi:bell",
+    iconURL: `${IconMap.BELL}`,
     selected: false,
   },
   {
     id: 5,
     label: "_global.settings",
     routeURL: "/",
-    iconURL: "bi:gear",
+    iconURL: `${IconMap.SETTINGS}`,
     selected: false,
   },
   {
     id: 6,
-    label: "components.sidebar-left-selector.label.sign-out",
+    label: "components.dropdown-user-options.sign-out",
     routeURL: "/",
-    iconURL: "bi:box-arrow-left",
+    iconURL: `${IconMap.SIGN_OUT}`,
+    selected: false,
+  },
+];
+
+const userOptionsSignedOut: MenuSelector[] = [
+  {
+    id: 1,
+    label: "_global.sign-up",
+    routeURL: "/auth/sign-up",
+    iconURL: `${IconMap.SIGN_IN}`,
+    selected: false,
+  },
+  {
+    id: 1,
+    label: "_global.sign-in",
+    routeURL: "/auth/sign-in",
+    iconURL: `${IconMap.CIRCLE_PERSON}`,
     selected: false,
   },
 ];

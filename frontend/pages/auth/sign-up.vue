@@ -24,11 +24,11 @@
           :is-icon-visible="true"
           input-type="password"
           :model-value="passwordValue"
-          :icons="['bi:eye-fill']"
+          :icons="[IconMap.VISIBLE]"
           :error="!isAllRulesValid && isBlurred"
         />
       </div>
-      <PasswordStrengthIndicator :password-value="passwordValue" />
+      <IndicatorPasswordStrength :password-value="passwordValue" />
       <TooltipPasswordRequirements
         v-if="
           !!passwordValue?.length &&
@@ -46,29 +46,29 @@
           :model-value="confirmPasswordValue"
           :icons="
             isPasswordMatch
-              ? ['bi:check-lg', 'bi:eye-fill']
-              : ['bi:x-lg', 'bi:eye-fill']
+              ? [IconMap.CHECK, IconMap.VISIBLE]
+              : [IconMap.X_LG, IconMap.VISIBLE]
           "
         />
       </div>
-      <div class="flex flex-row items-center">
-        <FormCheckbox
-          @update:modelValue="hasRed = $event"
-          :modelValue="hasRed"
-          value="yes"
-        />
-        <p class="flex flex-wrap pl-2">
-          {{ $t("pages._global.terms-of-service-pt-1") }}
-          <NuxtLink
-            :to="localePath('/legal/privacy-policy')"
-            target="_blank"
-            class="link-text ml-1 sm:block"
-            >{{ $t("pages._global.terms-of-service-pt-2") }}
-          </NuxtLink>
-        </p>
-      </div>
-      <div class="flex space-x-2">
+      <div class="flex flex-col space-y-3">
         <FriendlyCaptcha />
+        <div class="flex flex-row items-center">
+          <FormCheckbox
+            @update:modelValue="hasRed = $event"
+            :modelValue="hasRed"
+            value="yes"
+          />
+          <p class="flex flex-wrap pl-2">
+            {{ $t("pages._global.terms-of-service-pt-1") }}
+            <NuxtLink
+              :to="localePath('/legal/privacy-policy')"
+              target="_blank"
+              class="link-text ml-1 sm:block"
+              >{{ $t("pages._global.terms-of-service-pt-2") }}
+            </NuxtLink>
+          </p>
+        </div>
         <BtnAction
           @click="signUp"
           class="flex max-h-[48px] w-[116px] items-center justify-center truncate md:max-h-[40px] md:w-[96px]"
@@ -91,12 +91,10 @@
 </template>
 
 <script setup lang="ts">
+import { IconMap } from "~/types/icon-map";
 import type { PasswordRules } from "~/types/password-rules";
-const localePath = useLocalePath();
 
-definePageMeta({
-  layout: "auth",
-});
+const localePath = useLocalePath();
 
 const userNameValue = ref("");
 const passwordValue = ref("");

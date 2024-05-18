@@ -6,8 +6,8 @@
       class="rounded-full bg-light-distinct-text p-6 dark:bg-dark-menu-selection md:p-8"
     >
       <Icon
-        name="bi:camera-video"
-        :color="$colorMode.preference === 'dark' ? 'white' : 'black'"
+        :name="IconMap.VIDEO"
+        :color="$colorMode.value === 'dark' ? 'white' : 'black'"
         size="75px"
       />
     </div>
@@ -15,5 +15,7 @@
 </template>
 
 <script setup lang="ts">
+import { IconMap } from "~/types/icon-map";
+
 defineProps<{ link: string }>();
 </script>

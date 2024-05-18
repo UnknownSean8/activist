@@ -4,23 +4,33 @@
   >
     <div class="flex justify-center">
       <h1
+        id="landing-splash-header"
         class="w-10/12 text-center font-display text-3xl font-bold leading-snug sm:text-4xl sm:leading-snug md:max-w-lg md:text-5xl md:leading-snug lg:font-bold xl:max-w-2xl xl:text-6xl xl:leading-snug"
       >
         {{ $t("components.landing-splash.header") }}
       </h1>
     </div>
     <div class="flex justify-center">
-      <p
-        class="w-10/12 text-center text-base sm:text-xl md:max-w-lg md:text-lg xl:max-w-2xl xl:text-2xl"
+      <div
+        class="w-10/12 text-center text-base sm:text-xl md:w-3/4 md:text-lg xl:text-2xl"
       >
-        {{ $t("components.landing-splash.message") }}
-      </p>
+        <div class="hidden flex-col space-y-1 md:block xl:space-y-2">
+          <p>{{ $t("components.landing-splash.message-1") }}</p>
+          <p>{{ $t("components.landing-splash.message-2") }}</p>
+        </div>
+        <p class="md:hidden">
+          {{ $t("components.landing-splash.message-1") }}&nbsp;{{
+            $t("components.landing-splash.message-2")
+          }}
+        </p>
+      </div>
     </div>
     <div class="flex justify-center rounded-md">
       <BtnRouteExternal
+        id="request-access"
         :cta="true"
         label="components.btn-route-external.request-access"
-        linkTo="https://tally.so/r/nprxbq"
+        :linkTo="REQUEST_ACCESS_URL"
         fontSize="xl"
         ariaLabel="components.btn-route-external.request-access-aria-label"
       />

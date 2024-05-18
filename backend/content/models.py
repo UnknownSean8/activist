@@ -1,21 +1,5 @@
 """
-Content Models
-
-This file contains models for the content app.
-
-Contents:
-    - Discussion
-    - DiscussionEntry
-    - Faq
-    - Resource
-    - Task
-    - Topic
-    - Tag
-    - ResourceTopic
-    - ResourceTag
-    - TopicFormat
-    - DiscussionTag
-    - Image
+Models for the content app.
 """
 
 from uuid import uuid4
@@ -29,12 +13,10 @@ from backend.mixins.models import CreationDeletionMixin
 
 class Discussion(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    title = models.CharField(max_length=255)
     created_by = models.ForeignKey("authentication.UserModel", on_delete=models.CASCADE)
     org_id = models.ForeignKey("entities.Organization", on_delete=models.CASCADE)
-    group_id = models.ForeignKey("entities.Group", on_delete=models.CASCADE)
-    # movement_id = models.ForeignKey("entities.Movement", on_delete=models.CASCADE)  # To be created
     event_id = models.ForeignKey("events.Event", on_delete=models.CASCADE)
-    # vote_id = models.ForeignKey("events.Vote", on_delete=models.CASCADE)  # To be created
     category = models.CharField(max_length=255, blank=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     deletion_date = models.DateTimeField(null=True, blank=True)
@@ -69,11 +51,11 @@ class Faq(models.Model):
 class Resource(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=255)
+    created_by = models.ForeignKey("authentication.UserModel", on_delete=models.CASCADE)
     description = models.TextField(max_length=500)
-    topics = ArrayField(models.CharField(max_length=255), default=list, blank=True)
     category = models.CharField(max_length=255, blank=True)
     url = models.URLField(max_length=255)
-    private = models.BooleanField(default=True)
+    is_private = models.BooleanField(default=True)
     created_by = models.ForeignKey("authentication.UserModel", on_delete=models.CASCADE)
     creation_date = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
@@ -138,12 +120,12 @@ class TopicFormat(models.Model):
         return f"{self.id}"
 
 
-# class DiscussionTag(models.Model):
-#     discussion_id = models.ForeignKey(Discussion, on_delete=models.CASCADE)
-#     tag_id = models.ForeignKey(Tag, on_delete=models.CASCADE)
+class DiscussionTag(models.Model):
+    discussion_id = models.ForeignKey(Discussion, on_delete=models.CASCADE)
+    tag_id = models.ForeignKey(Tag, on_delete=models.CASCADE)
 
-#     def __str__(self) -> str:
-#         return f"{self.id}"
+    def __str__(self) -> str:
+        return f"{self.id}"
 
 
 class Image(models.Model):
@@ -155,3 +137,7 @@ class Image(models.Model):
 
     def __str__(self) -> str:
         return f"{self.id}"
+
+
+class IsoCodeMap(models.Model):
+    code = models.CharField(max_length=2)

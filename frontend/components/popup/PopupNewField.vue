@@ -13,7 +13,7 @@
         tabindex="0"
         class="absolute right-0 mr-1 text-light-distinct-text hover:text-light-text dark:text-dark-distinct-text hover:dark:text-dark-text"
       >
-        <Icon class="h-6 w-6" name="bi:x-circle-fill" />
+        <Icon class="h-6 w-6" :name="IconMap.CIRCLE_X_FILL" />
       </div>
     </div>
     <label for="popup-input" class="sr-only"> {{ fieldNamePrompt }}</label>
@@ -24,6 +24,14 @@
       class="focus-brand h-8 w-52 rounded-sm border border-light-text bg-transparent p-2 dark:border-dark-text"
       type="text"
       :placeholder="fieldNamePrompt"
+    />
+    <input
+      v-model="inputValue"
+      ref="input"
+      id="popup-input"
+      class="focus-brand h-8 w-52 rounded-sm border border-light-text bg-transparent p-2 dark:border-dark-text"
+      type="text"
+      :placeholder="fieldLabelPrompt"
     />
     <label for="popup-textarea" class="sr-only"> {{ descriptionPrompt }}</label>
     <textarea
@@ -47,7 +55,8 @@
         linkTo="placeholder-link"
         :label="ctaBtnLabel"
         fontSize="sm"
-        leftIcon="bi:plus-lg"
+        :leftIcon="IconMap.PLUS"
+        iconSize="1.35em"
         :ariaLabel="ctaBtnAriaLabel"
       />
     </div>
@@ -55,9 +64,12 @@
 </template>
 
 <script setup lang="ts">
+import { IconMap } from "~/types/icon-map";
+
 defineProps<{
   title: string;
   fieldNamePrompt: string;
+  fieldLabelPrompt?: string;
   descriptionPrompt?: string;
   ctaBtnLabel: string;
   ctaBtnAriaLabel: string;

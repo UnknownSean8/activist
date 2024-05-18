@@ -9,7 +9,7 @@
         <NuxtLink
           v-if="index === 0"
           class="focus-brand mx-[0.35rem] text-light-distinct-text hover:text-light-text dark:text-dark-distinct-text dark:hover:text-dark-text"
-          :to="localePath('/')"
+          :to="localePath('/home')"
         >
           &#60;
         </NuxtLink>
@@ -19,36 +19,54 @@
           >|</span
         >
         <span v-if="index !== displayBreadcrumbs.length - 1">
-          <a
+          <NuxtLink
             v-if="Number.isInteger(Number(breadcrumb)) && event"
             class="focus-brand text-light-distinct-text hover:text-light-text dark:text-dark-distinct-text dark:hover:text-dark-text"
-            :href="makeURL(breadcrumb)"
+            :to="makeURL(breadcrumb)"
           >
             {{ event.name }}
-          </a>
-          <a
+          </NuxtLink>
+          <NuxtLink
             v-else-if="Number.isInteger(Number(breadcrumb)) && organization"
             class="focus-brand text-light-distinct-text hover:text-light-text dark:text-dark-distinct-text dark:hover:text-dark-text"
-            :href="makeURL(breadcrumb)"
+            :to="makeURL(breadcrumb)"
           >
             {{ organization.name }}
-          </a>
-          <a
+          </NuxtLink>
+          <NuxtLink
+            v-else-if="
+              Number.isInteger(Number(breadcrumb)) && group && index == 1
+            "
+            class="focus-brand text-light-distinct-text hover:text-light-text dark:text-dark-distinct-text dark:hover:text-dark-text"
+            :to="makeURL(breadcrumb)"
+          >
+            {{ group.organization.name }}
+          </NuxtLink>
+          <NuxtLink
+            v-else-if="
+              Number.isInteger(Number(breadcrumb)) && group && index == 3
+            "
+            class="focus-brand text-light-distinct-text hover:text-light-text dark:text-dark-distinct-text dark:hover:text-dark-text"
+            :to="makeURL(breadcrumb)"
+          >
+            {{ group.name }}
+          </NuxtLink>
+          <NuxtLink
             v-else
             class="focus-brand text-light-distinct-text hover:text-light-text dark:text-dark-distinct-text dark:hover:text-dark-text"
-            :href="makeURL(breadcrumb)"
+            :to="makeURL(breadcrumb)"
           >
             {{ capitalizeFirstLetter(breadcrumb) }}
-          </a>
+          </NuxtLink>
         </span>
         <span v-else>
-          <a
+          <NuxtLink
             class="focus-brand text-light-distinct-text hover:text-light-text dark:text-dark-distinct-text dark:hover:text-dark-text"
-            :href="makeURL(breadcrumb)"
+            :to="makeURL(breadcrumb)"
             aria-current="page"
           >
             {{ capitalizeFirstLetter(breadcrumb) }}
-          </a>
+          </NuxtLink>
         </span>
       </li>
     </ul>
@@ -57,12 +75,14 @@
 
 <script setup lang="ts">
 import type { Event } from "~/types/event";
+import type { Group } from "~/types/group";
 import type { Organization } from "~/types/organization";
 const { locales } = useI18n();
 const localePath = useLocalePath();
 
 defineProps<{
   organization?: Organization;
+  group?: Group;
   event?: Event;
 }>();
 

@@ -7,7 +7,7 @@
         class="mr-5 fill-light-text dark:fill-dark-text"
       >
         <Icon
-          v-if="organization.imageURL === undefined"
+          v-if="organization.iconURL === undefined"
           name="IconOrganization"
           size="3em"
         />
@@ -16,7 +16,7 @@
           class="rounded border border-light-section-div dark:border-dark-section-div"
         >
           <img
-            :src="organization.imageURL"
+            :src="organization.iconURL"
             class="h-full w-12"
             :alt="
               $t('components._global.entity-logo', {
@@ -34,10 +34,10 @@
         :cta="true"
         :counter="upVotes"
         fontSize="sm"
-        leftIcon="bi:arrow-up"
+        :leftIcon="IconMap.ARROW_UP"
         iconSize="1.25em"
-        ariaLabel="components.btn-action.upvote-application-aria-label"
         :disabled="isVotingDisabled"
+        ariaLabel="components.btn-action.upvote-application-aria-label"
       />
       <BtnAction
         @click="$emit('down-vote')"
@@ -45,16 +45,17 @@
         :cta="true"
         :counter="downVotes"
         fontSize="sm"
-        leftIcon="bi:arrow-down"
+        :leftIcon="IconMap.ARROW_DOWN"
         iconSize="1.25em"
-        ariaLabel="components.btn-action.downvote-application-aria-label"
         :disabled="isVotingDisabled"
+        ariaLabel="components.btn-action.downvote-application-aria-label"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { IconMap } from "~/types/icon-map";
 import type { Organization } from "~/types/organization";
 
 /**

@@ -5,18 +5,18 @@
         {{ $t("components._global.donate") }}
       </h3>
       <div
-        class="cursor-pointer break-all rounded-lg p-1 transition-all hover:text-light-highlight dark:hover:text-dark-highlight"
+        class="cursor-pointer break-all rounded-lg p-1 text-light-text transition-all hover:text-light-distinct-text dark:text-dark-text dark:hover:text-dark-distinct-text"
       >
         <Icon
           v-if="userIsAdmin && !editModeEnabled"
           @click="toggleEditMode"
-          name="bi:pencil-square"
+          :name="IconMap.EDIT"
           size="1.2em"
         />
         <Icon
           v-else-if="userIsAdmin && editModeEnabled"
           @click="toggleEditMode"
-          name="bi:x-lg"
+          :name="IconMap.X_LG"
           size="1.2em"
         />
       </div>
@@ -31,7 +31,7 @@
       linkTo="/"
       label="components._global.donate"
       fontSize="sm"
-      rightIcon="bi:box-arrow-up-right"
+      :rightIcon="IconMap.EXTERNAL_LINK"
       iconSize="1.25em"
       ariaLabel="components.btn-route-external.go-to-donation-page-aria-label"
     />
@@ -39,6 +39,8 @@
 </template>
 
 <script setup lang="ts">
+import { IconMap } from "~/types/icon-map";
+
 defineProps<{
   userIsAdmin: boolean;
   donationPrompt?: string;

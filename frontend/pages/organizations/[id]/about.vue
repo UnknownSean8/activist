@@ -7,44 +7,69 @@
     </Head>
     <HeaderAppPage :organization="organization">
       <div class="flex space-x-2 pb-3 lg:space-x-3 lg:pb-4">
-        <BtnAction
+        <BtnRouteExternal
+          v-if="organization.getInvolvedURL"
+          class="w-max"
+          :cta="true"
+          :linkTo="organization.getInvolvedURL"
+          label="components.btn-route-internal.join-organization"
+          fontSize="sm"
+          :rightIcon="IconMap.ARROW_RIGHT"
+          iconSize="1.45em"
+          ariaLabel="components.btn-route-internal.join-organization-aria-label"
+        />
+        <!-- <BtnAction
           class="w-max"
           :cta="true"
           label="components.btn-action.support"
           fontSize="sm"
           leftIcon="IconSupport"
-          iconSize="1.25em"
-          :counter="organization.supporters"
+          iconSize="1.45em"
+          :counter="organization.supporters.length"
           ariaLabel="
             components.btn-action.support-organization-aria-label
           "
+        /> -->
+        <BtnAction
+          @click="openModal()"
+          @keydown.enter="openModal()"
+          class="w-max"
+          :cta="true"
+          :label="$t(shareButtonLabel)"
+          :hideLabelOnMobile="false"
+          fontSize="sm"
+          :leftIcon="IconMap.SHARE"
+          iconSize="1.45em"
+          :ariaLabel="$t('components._global.share-organization-aria-label')"
         />
         <ModalSharePage
+          @closeModal="handleCloseModal"
           :cta="true"
-          label="components._global.share-organization"
-          ariaLabel="components._global.share-organization-aria-label"
           :organization="organization"
+          :isOpen="modalIsOpen"
         />
       </div>
     </HeaderAppPage>
     <div class="space-y-6 pb-6">
-      <CardOrgApplicationVote
-        v-if="organization.status === 'pending'"
+      <!-- organization.status === 1 means it's application is pending. -->
+      <!-- <CardOrgApplicationVote
+        v-if="organization.status === 1"
         @up-vote="upVotes++"
         @down-vote="downVotes++"
         title="Votes in favor"
         :organizations="organizationsInFavor"
         :upVotes="upVotes"
         :downVotes="downVotes"
-      />
+      /> -->
       <div
-        class="grid grid-cols-1 grid-rows-2 space-y-6 pb-6 lg:grid-cols-3 lg:grid-rows-1 lg:space-y-0 lg:pb-0"
+        class="lg:grid lg:grid-cols-3 lg:grid-rows-1"
         :class="{
           'lg:mr-6 lg:space-x-6': !textExpanded,
         }"
       >
         <CardAbout
           @expand-reduce-text="expandReduceText"
+          class="mb-6 lg:mb-0"
           :class="{
             'lg:col-span-2': !textExpanded,
             'lg:col-span-3': textExpanded,
@@ -53,23 +78,24 @@
           :organization="organization"
         />
         <div class="h-full w-full">
-          <ModalMediaImageCarousel :class="{ 'lg:hidden': textExpanded }" />
+          <MediaImageCarouselFull :class="{ 'lg:hidden': textExpanded }" />
         </div>
       </div>
+      <!-- organization.status === 2 means it's active. -->
       <CardGetInvolved
-        v-if="organization.status === 'approved'"
+        v-if="organization.status === 2"
         :organization="organization"
       />
       <CardConnect
         :socialLinks="organization.socialLinks"
         :userIsAdmin="true"
       />
-      <CardDonate
-        v-if="organization.status === 'approved'"
+      <!-- <CardDonate
+        v-if="organization.status === 2"
         :userIsAdmin="true"
         :donationPrompt="organization.donationPrompt"
-      />
-      <div v-if="organization.status === 'pending'" class="space-y-6">
+      /> -->
+      <div v-if="organization.status === 1" class="space-y-6">
         <Discussion
           :discussionInput="testDiscussionInput"
           :discussionTexts="discussionEntries"
@@ -81,25 +107,48 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from "vue-router";
-import type { DiscussionEntry } from "~/types/card-discussion-entry";
-import type { DiscussionInput } from "~/types/card-discussion-input";
-import type { Organization } from "~/types/organization";
+import { BreakpointMap } from "~/types/breakpoint-map";
+import type { DiscussionEntry } from "~/types/discussion-entry";
+import type { DiscussionInput } from "~/types/discussion-input";
+import { IconMap } from "~/types/icon-map";
+import { testTechOrg } from "~/utils/testEntities";
 
-definePageMeta({
-  layout: "sidebar",
-});
+const organization = testTechOrg;
+// const route = useRoute();
 
 const textExpanded = ref(false);
 const expandReduceText = () => {
   textExpanded.value = !textExpanded.value;
 };
 
-const route = useRoute();
+const windowWidth = ref(window.innerWidth);
+const shareButtonLabel = ref("");
+
+function updateShareBtnLabel() {
+  windowWidth.value = window.innerWidth;
+  if (windowWidth.value < BreakpointMap.SMALL) {
+    shareButtonLabel.value = "components.btn-action.share";
+  } else {
+    shareButtonLabel.value = "components._global.share-organization";
+  }
+}
+
+onMounted(() => {
+  window.addEventListener("resize", updateShareBtnLabel);
+  updateShareBtnLabel();
+});
+
+onUpdated(() => {
+  updateShareBtnLabel();
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updateShareBtnLabel);
+});
 
 // TODO: for testing purpose, should be removed.
-const upVotes = ref(123);
-const downVotes = ref(123);
+// const upVotes = ref(123);
+// const downVotes = ref(123);
 
 const discussionEntries: DiscussionEntry[] = [
   {
@@ -132,39 +181,33 @@ const testDiscussionInput: DiscussionInput = {
   highRisk: false,
 };
 
-const testOrganization: Organization = {
-  name: "tech from below",
-  status: "approved",
-  tagline: "Technologie von und für soziale Bewegungen",
-  location: "Berlin, Germany",
-  description:
-    "Nulla aliqua sit fugiat commodo excepteur deserunt dolor ullamco Lorem. Esse aliquip nisi ullamco pariatur velit officia. Eiusmod commodo nulla consequat minim laboris pariatur adipisicing. Veniam amet nostrud id cupidatat. Esse duis velit elit duis non labore adipisicing sunt eu nostrud. Occaecat mollit et do consectetur fugiat amet.",
-  topic: "Technology and Privacy",
-  members: 3,
-  supporters: 60,
-  imageURL: "/images/tech-from-below.svg",
-  workingGroups: ["meetup", "code-night"],
-  socialLinks: ["tfb@mastodon", "tfb@email"],
-  donationPrompt: "Hey thanks!",
+// const organization = reactive<Organization>({ ...organization });
+// const organizationsInFavor = new Array(6)
+//   .fill(undefined)
+//   .map(() => organization);
+
+// onMounted(() => {
+//   const status = parseInt(route.query.status.toString());
+
+//   if (status !== undefined) {
+//     organization.status = status;
+//   }
+// });
+
+// provide("modalOrganizationStatusData", {
+//   discussionEntries: discussionEntries,
+//   organizationsInFavor: organizationsInFavor,
+//   upVotes: 6,
+//   downVotes: 4,
+// });
+
+const modalIsOpen = ref(false);
+
+function openModal() {
+  modalIsOpen.value = true;
+}
+
+const handleCloseModal = () => {
+  modalIsOpen.value = false;
 };
-
-const organization = reactive<Organization>({ ...testOrganization });
-const organizationsInFavor = new Array(6)
-  .fill(undefined)
-  .map(() => testOrganization);
-
-onMounted(() => {
-  const status = route.query.status?.toString();
-
-  if (status !== undefined) {
-    organization.status = status;
-  }
-});
-
-provide("modalOrganizationStatusData", {
-  discussionEntries: discussionEntries,
-  organizationsInFavor: organizationsInFavor,
-  upVotes: 6,
-  downVotes: 4,
-});
 </script>

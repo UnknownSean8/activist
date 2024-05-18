@@ -1,6 +1,7 @@
 # mypy: disable-error-code="override"
 from django.db.models import Q
 from rest_framework import status, viewsets
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -13,6 +14,7 @@ from .models import (
     DiscussionEntry,
     Faq,
     Image,
+    IsoCodeMap,
     Resource,
     ResourceTopic,
     Task,
@@ -24,6 +26,7 @@ from .serializers import (
     DiscussionSerializer,
     FaqSerializer,
     ImageSerializer,
+    IsoCodeMapSerializer,
     ResourceSerializer,
     ResourceTopicSerializer,
     TaskSerializer,
@@ -62,7 +65,7 @@ class DiscussionViewSet(viewsets.ModelViewSet[Discussion]):
     def list(self, request: Request) -> Response:
         if request.user.is_authenticated:
             query = self.queryset.filter(
-                Q(private=False) | Q(private=True, created_by=request.user)
+                Q(is_private=False) | Q(is_private=True, created_by=request.user)
             )
         else:
             query = self.queryset.filter()
@@ -71,7 +74,9 @@ class DiscussionViewSet(viewsets.ModelViewSet[Discussion]):
         return self.get_paginated_response(self.paginate_queryset(serializer.data))
 
     def update(self, request: Request, pk: str | None = None) -> Response:
-        """Just the created_by user can update the discussion"""
+        """
+        Just the created_by user can update the discussion.
+        """
         item = self.get_object()
         if item.created_by != request.user:
             return Response(
@@ -97,8 +102,7 @@ class DiscussionViewSet(viewsets.ModelViewSet[Discussion]):
 
     def destroy(self, request: Request, pk: str | None = None) -> Response:
         """
-        Deleted the whole discussion
-        - Only the created_by user can delete it
+        Deleted the whole discussion - requires created_by user.
         """
         item = self.get_object()
         if item.created_by != request.user:
@@ -141,7 +145,7 @@ class DiscussionEntryViewSet(viewsets.ModelViewSet[DiscussionEntry]):
     def list(self, request: Request) -> Response:
         if request.user.is_authenticated:
             query = self.queryset.filter(
-                Q(private=False) | Q(private=True, created_by=request.user)
+                Q(is_private=False) | Q(is_private=True, created_by=request.user)
             )
         else:
             query = self.queryset.filter()
@@ -219,10 +223,10 @@ class ResourceViewSet(viewsets.ModelViewSet[Resource]):
     def retrieve(self, request: Request, pk: str | None = None) -> Response:
         if request.user.is_authenticated:
             query = self.queryset.filter(
-                Q(private=False) | Q(private=True, created_by=request.user), id=pk
+                Q(is_private=False) | Q(is_private=True, created_by=request.user), id=pk
             )
         else:
-            query = self.queryset.filter(Q(private=False), id=pk)
+            query = self.queryset.filter(Q(is_private=False), id=pk)
 
         serializer = self.get_serializer(query)
         return Response(serializer.data)
@@ -230,10 +234,10 @@ class ResourceViewSet(viewsets.ModelViewSet[Resource]):
     def list(self, request: Request) -> Response:
         if request.user.is_authenticated:
             query = self.queryset.filter(
-                Q(private=False) | Q(private=True, created_by=request.user)
+                Q(is_private=False) | Q(is_private=True, created_by=request.user)
             )
         else:
-            query = self.queryset.filter(private=False)
+            query = self.queryset.filter(is_private=False)
 
         serializer = self.get_serializer(query, many=True)
         return self.get_paginated_response(self.paginate_queryset(serializer.data))
@@ -297,3 +301,13 @@ class TopicFormatViewSet(viewsets.ModelViewSet[TopicFormat]):
     queryset = TopicFormat.objects.all()
     serializer_class = TopicFormatSerializer
     pagination_class = CustomPagination
+
+
+class IsoCodeMapListAPIView(ListAPIView[IsoCodeMap]):
+    queryset = IsoCodeMap.objects.all()
+    serializer_class = IsoCodeMapSerializer
+
+    def get(self, request: Request) -> Response:
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
