@@ -91,6 +91,54 @@
               iconSize="1.5em"
             />
           </s-facebook>
+          <s-facebook-messenger
+            @popup-close="nativeBehaviorOptions.onClose"
+            @popup-open="nativeBehaviorOptions.onOpen"
+            @popup-block="nativeBehaviorOptions.onBlock"
+            @popup-focus="nativeBehaviorOptions.onFocus"
+            class="focus-brand"
+            :window-features="windowFeatures"
+            :use-native-behavior="useNativeBehavior"
+          >
+            <MetaTagSocialMedia
+              class="dark:hover:dark-distinct-text text-light-text hover:text-light-distinct-text dark:text-dark-text"
+              :iconName="IconMap.MESSENGER"
+              :text="$t('components.modal_share_page.messenger')"
+              iconSize="1.5em"
+            />
+          </s-facebook-messenger>
+          <div
+            @popup-close="nativeBehaviorOptions.onClose"
+            @popup-open="nativeBehaviorOptions.onOpen"
+            @popup-block="nativeBehaviorOptions.onBlock"
+            @popup-focus="nativeBehaviorOptions.onFocus"
+            class="focus-brand"
+            :window-features="windowFeatures"
+            :use-native-behavior="useNativeBehavior"
+          >
+            <MetaTagSocialMedia
+              class="dark:hover:dark-distinct-text text-light-text hover:text-light-distinct-text dark:text-dark-text"
+              :iconName="IconMap.INSTAGRAM"
+              :text="$t('components.modal_share_page.instagram')"
+              iconSize="1.5em"
+            />
+          </div>
+          <div
+            @popup-close="nativeBehaviorOptions.onClose"
+            @popup-open="nativeBehaviorOptions.onOpen"
+            @popup-block="nativeBehaviorOptions.onBlock"
+            @popup-focus="nativeBehaviorOptions.onFocus"
+            class="focus-brand"
+            :window-features="windowFeatures"
+            :use-native-behavior="useNativeBehavior"
+          >
+            <MetaTagSocialMedia
+              class="dark:hover:dark-distinct-text text-light-text hover:text-light-distinct-text dark:text-dark-text"
+              :iconName="IconMap.MATRIX"
+              :text="$t('components.modal_share_page.matrix')"
+              iconSize="1.5em"
+            />
+          </div>
           <div
             @click="
               copyToClipboardThenOpenURL(
@@ -239,7 +287,14 @@
 </template>
 
 <script setup lang="ts">
-import { SEmail, SFacebook, SMastodon, STelegram, STwitter } from "vue-socials";
+import {
+  SEmail,
+  SFacebook,
+  SMastodon,
+  STelegram,
+  STwitter,
+  SFacebookMessenger,
+} from "vue-socials";
 import ModalBase from "~/components/modal/ModalBase.vue";
 import type { User } from "~/types/auth/user";
 import type { BtnAction } from "~/types/btn-props";
