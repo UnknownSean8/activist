@@ -4,11 +4,11 @@
     <ModalUploadImageOrganization
       @closeModal="handleCloseModalUploadImage"
       :images="images || []"
-      :orgId="organization?.id || ''"
+      :orgId="orgId || ''"
     />
     <ModalUploadImageIcon
       @closeModal="handleCloseModalUploadImageIcon"
-      :entityId="organization?.id || ''"
+      :entityId="orgId || ''"
       :entityType="EntityType.ORGANIZATION"
     />
     <ModalQRCode />
